@@ -1,0 +1,47 @@
+version: v1beta9
+images:
+  backend-image:
+    # If running the code yourself, you'll likely need access to this registry
+    image: docker.pkg.github.com/davidroeca/devspace-talk/backend-image
+    context: ./backend
+    dockerfile: ./backend/Dockerfile
+    preferSyncOverRebuild: true
+    injectRestartHelper: true
+    build:
+      docker:
+        options:
+          target: development
+deployments:
+- name: devspace-talk
+  kubectl:
+    manifests:
+    - "./kubernetes/backend.yml"
+dev:
+  sync:
+  - imageName: backend-image
+    excludePaths:
+    - .git/
+    uploadExcludePaths:
+    - Dockerfile
+    - devspace.yaml
+    onUpload:
+      restartContainer: true
+profiles:
+- name: production
+  patches:
+  - op: remove
+    path: images.backend-image.injectRestartHelper
+  - op: replace
+    path: images.backend-image.build.docker.options.target
+    value: release
+- name: interactive
+  patches:
+  - op: add
+    path: dev.interactive
+    value:
+      defaultEnabled: true
+  - op: add
+    path: images.app.entrypoint
+    value:
+    - sleep
+    - "9999999999"

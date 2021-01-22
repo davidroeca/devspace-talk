@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-deployment
+spec:
+  selector:
+    matchLabels:
+      service: database-label
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: database-label
+    spec:
+      containers:
+        - name: database-dns-label
+          image: database-image
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/local_data
+            - name: POSTGRES_DB
+              value: backend_db
+            - name: POSTGRES_USER
+              value: backend_user
+            - name: POSTGRES_PASSWORD
+              value: backend_password
+          volumeMounts:
+            - name: database-volume
+              mountPath: /var/lib/postgresql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  ports:
+    - port: 5432
+  selector:
+    service: database-label

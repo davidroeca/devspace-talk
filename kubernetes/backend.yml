@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  selector:
+    matchLabels:
+      service: backend-label
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: backend-label
+    spec:
+      containers:
+        - name: backend-dns-label
+          image: backend-image
+          env:
+            - name: DATABASE_URL
+              # TODO: configure differently for production
+              value: 'postgres://backend_user:backend_password@database-service/backend_db'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  ports:
+    - port: 5000
+      protocol: TCP
+  selector:
+    service: backend-label
+  type: LoadBalancer

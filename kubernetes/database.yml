@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: database-dns-label
-          image: database-image
+          image: devspace-talk-database-image
           env:
             - name: PGDATA
               value: /var/lib/postgresql/local_data
@@ -24,10 +24,6 @@ spec:
               value: backend_user
             - name: POSTGRES_PASSWORD
               value: backend_password
-          volumeMounts:
-            - name: database-volume
-              mountPath: /var/lib/postgresql
-
 ---
 apiVersion: v1
 kind: Service

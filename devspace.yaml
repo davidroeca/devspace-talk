@@ -1,8 +1,7 @@
 version: v1beta9
 images:
-  backend-image:
-    # If running the code yourself, you'll likely need access to this registry
-    image: docker.pkg.github.com/davidroeca/devspace-talk/backend-image
+  devspace-talk-backend-image:
+    image: devspace-talk-backend-image
     context: ./backend
     dockerfile: ./backend/Dockerfile
     preferSyncOverRebuild: true
@@ -11,16 +10,25 @@ images:
       docker:
         options:
           target: development
+  devspace-talk-database-image:
+    image: devspace-talk-database-image
+    context: ./database
+    dockerfile: ./database/Dockerfile
+    preferSyncOverRebuild: true
 deployments:
 - name: devspace-talk
   kubectl:
     manifests:
     - "./kubernetes/backend.yml"
+    - "./kubernetes/database.yml"
 dev:
   sync:
-  - imageName: backend-image
+  - imageName: devspace-talk-backend-image
+    localSubPath: './backend'
     excludePaths:
     - .git/
+    - .venv/
+    - __pycache__/
     uploadExcludePaths:
     - Dockerfile
     - devspace.yaml
@@ -30,9 +38,9 @@ profiles:
 - name: production
   patches:
   - op: remove
-    path: images.backend-image.injectRestartHelper
+    path: images.devspace-talk-backend-image.injectRestartHelper
   - op: replace
-    path: images.backend-image.build.docker.options.target
+    path: images.devspace-talk-backend-image.build.docker.options.target
     value: release
 - name: interactive
   patches:

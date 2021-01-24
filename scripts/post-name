@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eo pipefail
+
+if [ -z "$1" ]
+then
+  echo "You must pass a name as the second argument. Exiting..."
+  exit 1
+fi
+
+set -u
+
+NAME=$1
+
+curl -X POST "$(minikube service backend-service -n devspace-talk --url)/api/name/${NAME}"

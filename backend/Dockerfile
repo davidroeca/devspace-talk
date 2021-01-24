@@ -14,10 +14,20 @@ RUN mkdir /home/appuser/src
 
 WORKDIR /home/appuser/src
 
+COPY --chown=appuser:appuser pyproject.toml .
+COPY --chown=appuser:appuser poetry.lock .
+COPY --chown=appuser:appuser poetry.toml .
+
+RUN poetry install
+
+COPY --chown=appuser:appuser app ./app
+COPY --chown=appuser:appuser run.py .
+COPY --chown=appuser:appuser migrations ./migrations
+
 FROM base as development
-# Do some stuff
-RUN touch hello.txt
-ENTRYPOINT [ "tail", "-lf", "hello.txt" ]
+
+ENTRYPOINT [ "poetry", "run" ]
+CMD [ "flask", "run" ]
 
 FROM base as release
 # Do some stuff

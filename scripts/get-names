@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+curl "$(minikube service backend-service -n devspace-talk --url)/api/names"

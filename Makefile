@@ -19,7 +19,7 @@ get-names:
 
 .PHONY: post-name
 post-name:
-	@if [ -z $(NAME) ]; then \
+	@if [ -z "$(NAME)" ]; then \
 		echo "NAME must be an environment variable set for this command to work"; \
 		exit 1; \
 		fi
@@ -41,7 +41,7 @@ run-migrations:
 
 .PHONY: generate-migration
 generate-migration:
-	@if [ -z $(MESSAGE) ]; then \
+	@if [ -z "$(MESSAGE)" ]; then \
 		echo "MESSAGE must be an environment variable set for this command to work"; \
 		exit 1; \
 		fi

@@ -31,8 +31,8 @@ def get_names():
                 "names": [
                     {
                         "name": record.name,
-                        # "created": record.created,
-                        # "updated": record.updated,
+                        # "created": record.created.isoformat(),
+                        # "updated": record.updated.isoformat(),
                     }
                     for record in db.session.query(Name)
                 ]

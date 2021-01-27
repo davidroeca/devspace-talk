@@ -23,7 +23,7 @@ post-name:
 		echo "NAME must be an environment variable set for this command to work"; \
 		exit 1; \
 		fi
-	./scripts/post-name $(NAME)
+	./scripts/post-name "$(NAME)"
 
 .PHONY: run-init-migrations
 run-init-migrations:

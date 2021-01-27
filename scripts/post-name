@@ -12,4 +12,5 @@ set -u
 
 NAME=$1
 
+# Right now this doesn't support spaces in the names, but it should ideally
 curl -X POST "$(minikube service backend-service -n devspace-talk --url)/api/name/${NAME}"
